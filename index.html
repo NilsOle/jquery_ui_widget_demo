@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>I heard there is a party tonight?</title>
+    <script src="jquery-1.11.1.min.js" charset="UTF-8"></script>
+    <script src="jquery-ui.min.js" charset="UTF-8"></script>
+    <script src="widget.js" charset="UTF-8"></script>
+</head>
+<body>
+<div id="heinzgaul" style="border:3px solid black;width:500px;height:500px;margin-bottom:50px;"></div>
+<div><input type="text" id="newguest_input">
+    <button id="newguest">Zur Party gehen</button>
+</div>
+<script>
+    $(window).on('load', function () {
+        $('#heinzgaul').party(
+                {
+                    'partyopen': function () {
+                        console.log('AddGuest enabled');
+                        $('button#newguest').on('click', function () {
+
+                            $('#heinzgaul').party('addGuest', $('input#newguest_input').val());
+                        })
+                    },
+
+                    'partystarter': 'Daniela',
+
+                    'blacklist': ['peter'],
+
+                    'reject': function (event, data) {
+                        console.log('reject popped up!');
+                        console.log(data);
+                        $('body').append(
+                                $('<h1></h1>', { 'text': 'Skandal: ' + data['name'] + ' wurde abgewiesen!'  })
+                        );
+                    },
+
+                    'newguest': function (event, data) {
+                        console.log(data);
+                        $('body').append(
+                                $('<h1></h1>', { 'text': data['name'] + ' ist jetzt auf der Party!'  })
+                        );
+                    },
+
+                    'partystart': function (event, data) {
+                        var message;
+                        if (data['name'] !== '') {
+                            message = data['name'] + ' hat die Party gestartet!';
+                        } else {
+                            message = 'Die Party wurde gestartet!';
+                        }
+                        $('body').append(
+                                $('<h1></h1>', { 'text': message  })
+                        );
+                    }
+                }
+        );
+    });
+</script>
+</body>
+</html>
